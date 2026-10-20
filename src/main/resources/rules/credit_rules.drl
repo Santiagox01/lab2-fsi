@@ -1,0 +1,71 @@
+package rules
+
+import com.udea.droolrules.model.Customer
+import com.udea.droolrules.model.CreditRequest
+import com.udea.droolrules.model.CreditResponse
+
+// Regla 1: Rechazar si el puntaje crediticio es menor a 500
+rule "RejectLowCreditScore"
+    when
+        $request : CreditRequest(customer.creditScore < 500)
+        $response : CreditResponse()
+    then
+        $response.setApproved(false);
+        $response.setMessage("Solicitud rechazada: Puntaje crediticio demasiado bajo.");
+end
+
+// Regla 2: Rechazar si la edad es menor a 18
+rule "RejectUnderAge"
+    when
+        $request : CreditRequest(customer.age < 18)
+        $response : CreditResponse()
+    then
+        $response.setApproved(false);
+        $response.setMessage("Solicitud rechazada: El cliente debe ser mayor de 18 años.");
+end
+
+// Regla 3: Crédito Personal - Evaluación
+rule "PersonalCreditApproval"
+    when
+        $request : CreditRequest(creditType == "personal", customer.age >= 18, customer.creditScore >= 500, customer.monthlyIncome >= 1000)
+        $response : CreditResponse()
+    then
+        $response.setApproved(true);
+        $response.setApprovedAmount(Math.min($request.getRequestAmount(), $request.getCustomer().getMonthlyIncome() * 10));
+        $response.setInterestRate($request.getCustomer().getCreditScore() > 700 ? 5.0 : 8.0);
+        $response.setMessage("Crédito personal aprobado.");
+end
+
+// Regla 4: Crédito Hipotecario - Evaluación
+rule "MortgageCreditApproval"
+    when
+        $request : CreditRequest(creditType == "hipotecario", customer.age >= 18, customer.creditScore >= 600, customer.monthlyIncome >= 3000)
+        $response : CreditResponse()
+    then
+        $response.setApproved(true);
+        $response.setApprovedAmount(Math.min($request.getRequestAmount(), $request.getCustomer().getMonthlyIncome() * 50));
+        $response.setInterestRate($request.getCustomer().getCreditScore() > 750 ? 3.5 : 4.5);
+        $response.setMessage("Crédito hipotecario aprobado.");
+end
+
+// Regla 5: Crédito Automotriz - Evaluación
+rule "AutoCreditApproval"
+    when
+        $request : CreditRequest(creditType == "automotriz", customer.age >= 18, customer.creditScore >= 550, customer.monthlyIncome >= 1500)
+        $response : CreditResponse()
+    then
+        $response.setApproved(true);
+        $response.setApprovedAmount(Math.min($request.getRequestAmount(), $request.getCustomer().getMonthlyIncome() * 20));
+        $response.setInterestRate($request.getCustomer().getCreditScore() > 700 ? 6.0 : 7.5);
+        $response.setMessage("Crédito automotriz aprobado.");
+end
+
+// Regla 6: Rechazar si no cumple con requisitos mínimos por tipo de crédito
+rule "RejectInvalidCreditType"
+    when
+        $request : CreditRequest()
+        $response : CreditResponse(approved == false)
+    then
+        $response.setMessage($response.getMessage() != null ? $response.getMessage() : "Solicitud rechazada: No cumple con los requisitos para el tipo de crédito solicitado.");
+end
+

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Reglas de Aerolínea - Drools</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #212529;
+            padding: 30px 15px;
+        }
+        .form-card {
+            max-width: 850px;
+            margin: auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            border: 1px solid #dee2e6;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+        }
+        .section-header {
+            font-size: 1.15rem;
+            font-weight: 700;
+            border-bottom: 2px solid #212529;
+            padding-bottom: 6px;
+            margin-bottom: 18px;
+        }
+        .error {
+            color: #dc3545;
+            font-size: 0.85rem;
+        }
+        .preset-btn {
+            font-size: 0.8rem;
+            margin: 2px;
+        }
+    </style>
+</head>
+<body>
+<div class="form-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="h4 fw-bold mb-0">✈️ Evaluación de Reglas de Aerolínea (Drools)</h2>
+        <a th:href="@{/}" class="btn btn-outline-secondary btn-sm">Inicio</a>
+    </div>
+    <p class="text-muted small">Ingrese los parámetros del pasajero y del vuelo para evaluar las 10 reglas de negocio en la memoria de trabajo de Drools.</p>
+
+    <!-- Botones de prueba rápida para cada una de las 10 reglas -->
+    <div class="mb-4 p-3 bg-light rounded border">
+        <h6 class="fw-bold mb-2 small text-uppercase">⚡ Pruebas Rápidas de Reglas:</h6>
+        <div class="d-flex flex-wrap gap-1">
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(1)">R1: Upgrade Retraso</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(2)">R2: Senior Check-in</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(3)">R3: Descuento Equipaje</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(4)">R4: Denegar Upgrade (>23kg)</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(5)">R5: Salida Emergencia</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(6)">R6: Compensación $200</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(7)">R7: +500 Pts Larga Distancia</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(8)">R8: Restricción Vuelo Corto</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(9)">R9: Salón VIP Platinum</button>
+            <button type="button" class="btn btn-outline-dark btn-sm preset-btn" onclick="applyPreset(10)">R10: Asiento Familiar</button>
+        </div>
+    </div>
+
+    <form th:action="@{/airline/evaluate}" th:object="${airlineRequest}" method="post">
+        <!-- DATOS DEL PASAJERO -->
+        <div class="section-header">1. Información del Pasajero</div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-6">
+                <label for="name" class="form-label small fw-semibold">Nombre del Pasajero:</label>
+                <input type="text" id="name" class="form-control form-control-sm" th:field="${airlineRequest.passenger.name}">
+                <span class="error" th:errors="${airlineRequest.passenger.name}"></span>
+            </div>
+            <div class="col-md-3">
+                <label for="age" class="form-label small fw-semibold">Edad:</label>
+                <input type="number" id="age" class="form-control form-control-sm" th:field="${airlineRequest.passenger.age}">
+                <span class="error" th:errors="${airlineRequest.passenger.age}"></span>
+            </div>
+            <div class="col-md-3">
+                <label for="membershipStatus" class="form-label small fw-semibold">Membresía:</label>
+                <select id="membershipStatus" class="form-select form-select-sm" th:field="${airlineRequest.passenger.membershipStatus}">
+                    <option value="Basic">Basic</option>
+                    <option value="Silver">Silver</option>
+                    <option value="Gold">Gold</option>
+                    <option value="Platinum">Platinum</option>
+                </select>
+                <span class="error" th:errors="${airlineRequest.passenger.membershipStatus}"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="seatPreference" class="form-label small fw-semibold">Preferencia Asiento:</label>
+                <select id="seatPreference" class="form-select form-select-sm" th:field="${airlineRequest.passenger.seatPreference}">
+                    <option value="Any">Cualquiera (Any)</option>
+                    <option value="Window">Ventana (Window)</option>
+                    <option value="Aisle">Pasillo (Aisle)</option>
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label for="luggageWeight" class="form-label small fw-semibold">Peso Equipaje (kg):</label>
+                <input type="number" id="luggageWeight" step="0.1" class="form-control form-control-sm" th:field="${airlineRequest.passenger.luggageWeight}">
+                <span class="error" th:errors="${airlineRequest.passenger.luggageWeight}"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="loyaltyPoints" class="form-label small fw-semibold">Puntos Iniciales:</label>
+                <input type="number" id="loyaltyPoints" class="form-control form-control-sm" th:field="${airlineRequest.passenger.loyaltyPoints}">
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="travelingWithChildren" th:field="${airlineRequest.passenger.travelingWithChildren}">
+                    <label class="form-check-label small" for="travelingWithChildren">
+                        Viaja con niños / menores a cargo
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- DATOS DEL VUELO -->
+        <div class="section-header">2. Información del Vuelo</div>
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <label for="flightNumber" class="form-label small fw-semibold">Número de Vuelo:</label>
+                <input type="text" id="flightNumber" class="form-control form-control-sm" th:field="${airlineRequest.flight.flightNumber}">
+                <span class="error" th:errors="${airlineRequest.flight.flightNumber}"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="delayMinutes" class="form-label small fw-semibold">Retraso (Minutos):</label>
+                <input type="number" id="delayMinutes" class="form-control form-control-sm" th:field="${airlineRequest.flight.delayMinutes}">
+                <span class="error" th:errors="${airlineRequest.flight.delayMinutes}"></span>
+            </div>
+            <div class="col-md-4">
+                <label for="durationHours" class="form-label small fw-semibold">Duración Vuelo (Horas):</label>
+                <input type="number" id="durationHours" step="0.1" class="form-control form-control-sm" th:field="${airlineRequest.flight.durationHours}">
+                <span class="error" th:errors="${airlineRequest.flight.durationHours}"></span>
+            </div>
+            <div class="col-12">
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" id="emergencyExitAvailable" th:field="${airlineRequest.flight.emergencyExitAvailable}">
+                    <label class="form-check-label small" for="emergencyExitAvailable">
+                        Asiento en fila de salida de emergencia disponible
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-dark py-2 fw-semibold">🚀 Disparar Motor Drools (FireAllRules)</button>
+        </div>
+    </form>
+</div>
+
+<script>
+function applyPreset(ruleNum) {
+    const f = document;
+    // Defaults
+    f.getElementById('name').value = 'Pasajero Ejemplo';
+    f.getElementById('age').value = 30;
+    f.getElementById('membershipStatus').value = 'Basic';
+    f.getElementById('travelingWithChildren').checked = false;
+    f.getElementById('seatPreference').value = 'Window';
+    f.getElementById('luggageWeight').value = 12.0;
+    f.getElementById('loyaltyPoints').value = 500;
+    f.getElementById('flightNumber').value = 'AV9320';
+    f.getElementById('delayMinutes').value = 10;
+    f.getElementById('durationHours').value = 2.5;
+    f.getElementById('emergencyExitAvailable').checked = true;
+
+    if (ruleNum === 1) { // Upgrade Frequent Flyer with Delay > 60m
+        f.getElementById('name').value = 'Carlos Gómez (Gold)';
+        f.getElementById('membershipStatus').value = 'Gold';
+        f.getElementById('delayMinutes').value = 75;
+        f.getElementById('luggageWeight').value = 18.0;
+    } else if (ruleNum === 2) { // Senior Check-in (>65)
+        f.getElementById('name').value = 'Beatriz Elena (Senior)';
+        f.getElementById('age').value = 70;
+    } else if (ruleNum === 3) { // Light luggage (<10kg)
+        f.getElementById('name').value = 'Mateo Ruiz';
+        f.getElementById('luggageWeight').value = 7.5;
+    } else if (ruleNum === 4) { // Deny Upgrade (>23kg)
+        f.getElementById('name').value = 'Felipe Castro (Platinum c/ exceso)';
+        f.getElementById('membershipStatus').value = 'Platinum';
+        f.getElementById('delayMinutes').value = 90;
+        f.getElementById('luggageWeight').value = 28.0;
+    } else if (ruleNum === 5) { // Emergency Exit (18-40, Any, Available)
+        f.getElementById('name').value = 'Daniela Ramos (Joven Adulto)';
+        f.getElementById('age').value = 24;
+        f.getElementById('seatPreference').value = 'Any';
+        f.getElementById('emergencyExitAvailable').checked = true;
+    } else if (ruleNum === 6) { // Extreme delay (>180m, $200)
+        f.getElementById('name').value = 'Andrés Morales';
+        f.getElementById('delayMinutes').value = 210;
+    } else if (ruleNum === 7) { // Long flight (>5h, not Basic, +500pts)
+        f.getElementById('name').value = 'Sofía Vargas (Silver)';
+        f.getElementById('membershipStatus').value = 'Silver';
+        f.getElementById('durationHours').value = 7.5;
+        f.getElementById('loyaltyPoints').value = 1000;
+    } else if (ruleNum === 8) { // Short flight (<2h, >15kg rejected)
+        f.getElementById('name').value = 'Jorge Medina';
+        f.getElementById('durationHours').value = 1.2;
+        f.getElementById('luggageWeight').value = 19.5;
+    } else if (ruleNum === 9) { // VIP Platinum
+        f.getElementById('name').value = 'Valeria Osorio (Platinum VIP)';
+        f.getElementById('membershipStatus').value = 'Platinum';
+    } else if (ruleNum === 10) { // Family Preferential
+        f.getElementById('name').value = 'Familia Martínez';
+        f.getElementById('travelingWithChildren').checked = true;
+        f.getElementById('seatPreference').value = 'Any';
+    }
+}
+</script>
+</body>
+</html>
