@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informe Laboratorio 2 - Drools & Spring Boot</title>
+    <style>
+    
+body {
+    font-family: 'Times New Roman', Times, Georgia, serif;
+    line-height: 1.6;
+    color: #000000;
+    max-width: 900px;
+    margin: 40px auto;
+    padding: 0 30px;
+    background-color: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    color: #000000;
+    font-weight: 700;
+    margin-top: 32px;
+    margin-bottom: 14px;
+}
+
+h1 {
+    font-size: 2.1em;
+    border-bottom: 3px solid #000000;
+    text-align: center;
+    padding-bottom: 12px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+}
+
+h2 {
+    font-size: 1.45em;
+    border-bottom: 1.5px solid #000000;
+    padding-bottom: 6px;
+    margin-top: 36px;
+}
+
+h3 {
+    font-size: 1.2em;
+    border-bottom: 1px solid #333333;
+    padding-bottom: 4px;
+}
+
+h4 {
+    font-size: 1.05em;
+}
+
+p, li {
+    font-size: 1.05em;
+    text-align: justify;
+    color: #000000;
+}
+
+strong {
+    color: #000000;
+    font-weight: 700;
+}
+
+a {
+    color: #000000;
+    text-decoration: underline;
+}
+
+hr {
+    border: none;
+    border-top: 1.5px solid #000000;
+    margin: 30px 0;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 22px 0;
+    font-size: 0.95em;
+}
+
+table, th, td {
+    border: 1px solid #000000;
+}
+
+th, td {
+    padding: 8px 12px;
+    text-align: left;
+}
+
+th {
+    background-color: #f0f0f0;
+    color: #000000;
+    font-weight: 700;
+}
+
+pre, code {
+    font-family: 'Courier New', Courier, monospace;
+    color: #000000;
+}
+
+pre {
+    background-color: #f9f9f9;
+    border: 1px solid #000000;
+    border-left: 5px solid #000000;
+    padding: 14px 18px;
+    overflow-x: auto;
+    font-size: 0.9em;
+    line-height: 1.4;
+    margin: 18px 0;
+}
+
+code {
+    background-color: #f2f2f2;
+    padding: 2px 5px;
+    border: 1px solid #cccccc;
+    font-size: 0.92em;
+}
+
+pre code {
+    background: transparent;
+    border: none;
+    padding: 0;
+}
+
+img {
+    max-width: 95%;
+    height: auto;
+    display: block;
+    margin: 24px auto;
+    border: 1.5px solid #000000;
+    padding: 4px;
+    background: #ffffff;
+}
+
+blockquote {
+    border-left: 4px solid #000000;
+    margin: 18px 0;
+    padding: 10px 20px;
+    background-color: #f8f8f8;
+    color: #000000;
+}
+
+@media print {
+    body {
+        max-width: 100%;
+        margin: 20mm 15mm;
+        padding: 0;
+    }
+    img {
+        max-width: 90%;
+        page-break-inside: avoid;
+    }
+    table, pre {
+        page-break-inside: avoid;
+    }
+    h1, h2, h3 {
+        page-break-after: avoid;
+    }
+}
+
+    </style>
+</head>
+<body>
+<h1>INFORME DE LABORATORIO N° 2</h1>
+<h1>REGLAS DEL NEGOCIO CON SPRING BOOT Y DROOLS (BRMS)</h1>
+<p><strong>Universidad de Antioquia</strong><br />
+<strong>Facultad de Ingeniería — Departamento de Ingeniería de Sistemas</strong><br />
+<strong>Curso:</strong> Fundamentos de Sistemas de Información (2026)<br />
+<strong>Profesor:</strong> Diego Botia<br />
+<strong>Estudiante:</strong> Santiago Jaramillo<br />
+<strong>Fecha:</strong> Octubre de 2026<br />
+<strong>Repositorio GitHub:</strong> <a href="https://github.com/Santiagox01/lab2-fsi">https://github.com/Santiagox01/lab2-fsi</a><br />
+<strong>Repositorio Guía Docente:</strong> <a href="https://github.com/diegobotia/droolsrules">https://github.com/diegobotia/droolsrules</a></p>
+<hr />
+<h2>1. RESUMEN EJECUTIVO</h2>
+<p>El presente informe documenta la investigación, diseño, desarrollo y validación experimental del <strong>Laboratorio N° 2</strong>, centrado en la integración del motor de reglas de negocio <strong>Drools</strong> con el ecosistema <strong>Spring Boot 3</strong> en <strong>Java 21</strong>.</p>
+<p>Los Sistemas de Administración de Reglas de Negocio (<strong>BRMS</strong> - <em>Business Rules Management Systems</em>) representan un cambio de paradigma frente a la programación imperativa convencional, al permitir que la lógica de decisión corporativa se externalice en artefactos declarativos (<code>.drl</code>), desacoplándola del flujo procedimental del código de la aplicación.</p>
+<p>En este trabajo se construyó una solución robusta y completa que abarca:</p>
+<ol>
+<li><strong>El Motor de Reglas de Aerolínea (Ejercicio Principal):</strong> Implementación de las <strong>10 reglas de negocio</strong> solicitadas en la guía oficial para la asignación dinámica de ascensos a clase ejecutiva, check-in prioritario para adultos mayores, descuentos en tarifas por equipaje ligero, penalizaciones por exceso de peso, asignación de salidas de emergencia a adultos jóvenes, compensaciones económicas por retrasos severos, acreditación de puntos de lealtad, restricciones de equipaje en vuelos cortos, pases a salones VIP y asignación preferencial de asientos para grupos familiares.</li>
+<li><strong>El Sistema de Evaluación de Créditos Bancarios (Módulo Tutorial):</strong> Implementación integral del servicio de evaluación de riesgo crediticio (personal, hipotecario y automotriz) con validación mediante Jakarta Validation y ejecución de 6 reglas Drools.</li>
+<li><strong>Mecanismo de Interacción Dual:</strong> Exposición de servicios mediante <strong>API REST (JSON)</strong> y una <strong>Interfaz Web Interactiva (Thymeleaf con Bootstrap 5)</strong> que incluye botones de prueba rápida (<em>presets</em>) para evaluar cada regla en tiempo real.</li>
+<li><strong>Verificación Automatizada Exhaustiva:</strong> Creación de una suite de <strong>21 pruebas unitarias automáticas con JUnit 5</strong>, alcanzando una tasa de éxito del 100% (0 errores, 0 fallos).</li>
+<li><strong>Resolución de Compatibilidad Java 21:</strong> Diagnóstico y resolución del conflicto histórico entre versiones anteriores de Drools/MVEL y la eliminación de la clase <code>java.lang.Compiler</code> en Java 21, logrando una compilación nativa y limpia mediante la actualización controlada de dependencias (<code>mvel2 2.5.2.Final</code>).</li>
+</ol>
+<hr />
+<h2>2. INTRODUCCIÓN Y FUNDAMENTOS TEÓRICOS</h2>
+<h3>2.1. El Concepto de BRMS (Business Rules Management System)</h3>
+<p>En el desarrollo de software empresarial convencional, la lógica de negocio suele codificarse mediante estructuras condicionales anidadas (<code>if-else</code>, <code>switch-case</code>) dispersas a lo largo de las capas de servicio y controladores. Este enfoque monolítico introduce graves desventajas:</p>
+<ul>
+<li><strong>Alta rigidez:</strong> Cualquier cambio en una política de precios, descuentos o elegibilidad exige recompilar, probar y redesplegar toda la aplicación.</li>
+<li><strong>Dificultad de mantenimiento:</strong> A medida que crecen las excepciones de negocio, el código se vuelve frágil, propenso a errores colaterales y difícil de auditar.</li>
+<li><strong>Brecha de comunicación:</strong> Los expertos del dominio de negocio (analistas, administradores) no pueden leer ni validar directamente el código fuente.</li>
+</ul>
+<p>Un <strong>BRMS</strong> desacopla las reglas del negocio de la arquitectura de la aplicación. Las reglas se definen en un lenguaje específico del dominio (<strong>DRL</strong> - <em>Drools Rule Language</em>), permitiendo que la lógica sea declarativa, atómica y comprensible tanto para desarrolladores como para analistas.</p>
+<h3>2.2. El Algoritmo Rete y el Motor Drools</h3>
+<p>Drools opera sobre una adaptación orientada a objetos del <strong>algoritmo Rete</strong>, propuesto originalmente por Charles Forgy en 1974. En lugar de evaluar secuencialmente cada regla contra cada objeto (lo cual tendría una complejidad computacional ineficiente de orden cuadrático o cúbico), Rete construye una red dirigida y acíclica de nodos en memoria:</p>
+<ul>
+<li><strong>Nodos Raíz (Type Nodes):</strong> Filtran los hechos por tipo de clase Java.</li>
+<li><strong>Nodos Alpha (Alpha Nodes):</strong> Evalúan condiciones sobre campos individuales de un único hecho (ej. <code>age &gt; 65</code>, <code>luggageWeight &lt; 10.0</code>).</li>
+<li><strong>Nodos Beta (Beta Nodes):</strong> Evalúan relaciones cruzadas entre múltiples hechos (ej. vincular un hecho <code>Passenger</code> con un hecho <code>Flight</code>).</li>
+<li><strong>Nodos Terminales (Terminal Nodes):</strong> Representan la activación de una regla lista para ser disparada en la <strong>Agenda</strong>.</li>
+</ul>
+<p>Cuando un hecho se inserta o modifica en la memoria de trabajo (<em>Working Memory</em>), este se propaga únicamente a través de las ramas afectadas de la red Rete, garantizando tiempos de respuesta casi instantáneos incluso ante grandes volúmenes de datos.</p>
+<h3>2.3. Componentes Principales de la Arquitectura KIE (Knowledge Is Everything)</h3>
+<ol>
+<li><strong>KieServices:</strong> Punto de acceso central singleton a todas las utilidades de KIE.</li>
+<li><strong>KieFileSystem:</strong> Sistema de archivos virtual en memoria donde se registran las definiciones <code>.drl</code>.</li>
+<li><strong>KieBuilder:</strong> Compilador interno responsable de validar la sintaxis DRL y construir el modelo ejecutable.</li>
+<li><strong>KieModule:</strong> Contenedor de los artefactos de conocimiento compilados.</li>
+<li><strong>KieContainer:</strong> Fábrica encargada de instanciar sesiones de conocimiento basadas en la base de reglas compilada.</li>
+<li><strong>KieSession:</strong> Entorno de ejecución en el cual se insertan los hechos (<code>insert</code>), se ejecutan las reglas (<code>fireAllRules</code>) y se libera la memoria (<code>dispose</code>).</li>
+</ol>
+<hr />
+<h2>3. ARQUITECTURA TÉCNICA E IMPLEMENTACIÓN DEL SISTEMA</h2>
+<h3>3.1. Estructura General del Proyecto</h3>
+<p>El proyecto se organizó bajo la convención estándar de Maven y Spring Boot, estructurado en paquetes limpios según responsabilidades:</p>
+<pre><code>lab2-fsi/
+├── pom.xml                                      # Configuración de dependencias Spring Boot 3 + Drools 7 + MVEL 2
+├── src/
+│   ├── main/
+│   │   ├── java/com/udea/droolrules/
+│   │   │   ├── DroolrulesApplication.java       # Clase principal de arranque Spring Boot
+│   │   │   ├── config/
+│   │   │   │   └── DroolsConfig.java            # Configuración y Bean del KieContainer
+│   │   │   ├── controller/
+│   │   │   │   ├── AirlineController.java       # Controlador web y REST del módulo de aerolínea
+│   │   │   │   ├── CreditEvaluationController.java # Controlador web y REST del módulo de crédito
+│   │   │   │   └── HomeController.java          # Controlador del portal de bienvenida
+│   │   │   ├── model/
+│   │   │   │   ├── AirlineEvaluationRequest.java # DTO de entrada para la API de aerolínea
+│   │   │   │   ├── AirlineEvaluationResponse.java # DTO de salida con trazabilidad de reglas
+│   │   │   │   ├── Customer.java                # Hecho del cliente bancario con validaciones
+│   │   │   │   ├── CreditRequest.java           # Solicitud de crédito
+│   │   │   │   ├── CreditResponse.java          # Resultado crediticio calculado
+│   │   │   │   ├── Flight.java                  # Hecho del vuelo (número, retraso, duración, salida emergencia)
+│   │   │   │   └── Passenger.java               # Hecho del pasajero (edad, estatus, equipaje, asiento, clase)
+│   │   │   └── service/
+│   │   │       ├── AirlineEvaluationService.java # Servicio de orquestación de sesión Drools de aerolínea
+│   │   │       └── CreditEvaluationService.java  # Servicio de orquestación de sesión Drools de crédito
+│   │   └── resources/
+│   │       ├── application.properties           # Propiedades de servidor y configuración
+│   │       ├── rules/
+│   │       │   ├── airline_rules.drl            # Definición formal de las 10 reglas de la aerolínea
+│   │       │   └── credit_rules.drl             # Definición formal de las 6 reglas crediticias
+│   │       └── templates/
+│   │           ├── index.html                   # Portal de inicio para navegar entre módulos
+│   │           ├── airline_form.html            # Formulario interactivo de aerolínea con 10 presets
+│   │           ├── airline_result.html          # Vista de resultados y desglose de hechos
+│   │           ├── credit_form.html             # Formulario de crédito bancario
+│   │           └── credit_result.html           # Vista de resultados crediticios
+│   └── test/java/com/udea/droolrules/
+│       ├── AirlineRulesTest.java                # 11 Pruebas unitarias para las reglas de aerolínea
+│       ├── CreditRulesTest.java                 # 9 Pruebas unitarias para las reglas crediticias
+│       └── DroolrulesApplicationTests.java      # Prueba de verificación de carga del contexto Spring
+</code></pre>
+<h3>3.2. Configuración del Motor Drools (<code>DroolsConfig.java</code>)</h3>
+<p>Para permitir que la aplicación ejecute dinámicamente ambos dominios de reglas sin colisiones, la clase <code>DroolsConfig</code> compila en el mismo contenedor virtual tanto <code>credit_rules.drl</code> como <code>airline_rules.drl</code>:</p>
+<pre><code class="language-java">@Configuration
+public class DroolsConfig {
+
+    private static final KieServices kieServices = KieServices.Factory.get();
+    private static final String RULES_CREDIT_RULES_DRL = &quot;rules/credit_rules.drl&quot;;
+    private static final String RULES_AIRLINE_RULES_DRL = &quot;rules/airline_rules.drl&quot;;
+
+    @Bean
+    public KieContainer kieContainer() {
+        KieFileSystem kieFileSystem = kieServices.newKieFileSystem();
+        kieFileSystem.write(ResourceFactory.newClassPathResource(RULES_CREDIT_RULES_DRL));
+        kieFileSystem.write(ResourceFactory.newClassPathResource(RULES_AIRLINE_RULES_DRL));
+        KieBuilder kb = kieServices.newKieBuilder(kieFileSystem);
+        kb.buildAll();
+        KieModule kieModule = kb.getKieModule();
+        return kieServices.newKieContainer(kieModule.getReleaseId());
+    }
+}
+</code></pre>
+<hr />
+<h2>4. IMPLEMENTACIÓN DE LAS 10 REGLAS DE NEGOCIO DE LA AEROLÍNEA</h2>
+<p>A continuación se detalla cada una de las 10 reglas programadas en <code>src/main/resources/rules/airline_rules.drl</code>, explicando su propósito de negocio, condiciones (<em>When / LHS</em>), consecuencias (<em>Then / RHS</em>) y estrategias de control de agenda (<em>Salience</em> y modificación de hechos en memoria de trabajo).</p>
+<h3>Regla 1: Upgrade a Clase Ejecutiva por Estatus Frecuente y Retraso</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>UpgradeToBusinessClassForFrequentFlyersWithDelays</code></li>
+<li><strong>Condición:</strong> Pasajero con membresía &quot;Gold&quot; o &quot;Platinum&quot;, que se encuentre habilitado para ascensos (<code>upgradeEligible == true</code>), que no esté ya en Business, y que aborde un vuelo con más de 60 minutos de retraso (<code>delayMinutes &gt; 60</code>).</li>
+<li><strong>Acción:</strong> Ascenso a clase ejecutiva (<code>assignedClass = &quot;Business&quot;</code>) y registro de la regla en el historial del pasajero.</li>
+<li><strong>Salience:</strong> 20 (se evalúa tras validar posibles penalizaciones de equipaje).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;UpgradeToBusinessClassForFrequentFlyersWithDelays&quot;
+    salience 20
+    when
+        $p : Passenger(membershipStatus in (&quot;Gold&quot;, &quot;Platinum&quot;), upgradeEligible == true, assignedClass != &quot;Business&quot;)
+        $f : Flight(delayMinutes &gt; 60)
+    then
+        $p.setAssignedClass(&quot;Business&quot;);
+        $p.getAppliedRules().add(&quot;UpgradeToBusinessClassForFrequentFlyersWithDelays: Ascenso a clase ejecutiva por estatus frecuente y retraso &gt; 60m&quot;);
+end
+</code></pre>
+<h3>Regla 2: Check-in Prioritario para Adultos Mayores</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>PriorityCheckInForSeniors</code></li>
+<li><strong>Condición:</strong> Pasajero con edad estrictamente superior a 65 años (<code>age &gt; 65</code>).</li>
+<li><strong>Acción:</strong> Activa el indicador de check-in prioritario (<code>priorityCheckIn = true</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;PriorityCheckInForSeniors&quot;
+    when
+        $p : Passenger(age &gt; 65, priorityCheckIn == false)
+    then
+        $p.setPriorityCheckIn(true);
+        $p.getAppliedRules().add(&quot;PriorityCheckInForSeniors: Check-in prioritario activado para adulto mayor (&gt; 65 años)&quot;);
+end
+</code></pre>
+<h3>Regla 3: Descuento por Equipaje Ligero</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>DiscountForLightLuggage</code></li>
+<li><strong>Condición:</strong> Pasajero cuyo equipaje registrado pese estrictamente menos de 10 kg (<code>luggageWeight &lt; 10.0</code>).</li>
+<li><strong>Acción:</strong> Aplica un descuento del 10% en la tarifa (<code>discountPercentage = 10.0</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;DiscountForLightLuggage&quot;
+    when
+        $p : Passenger(luggageWeight &lt; 10.0, discountPercentage &lt; 10.0)
+    then
+        $p.setDiscountPercentage(10.0);
+        $p.getAppliedRules().add(&quot;DiscountForLightLuggage: 10% de descuento por equipaje ligero (&lt; 10kg)&quot;);
+end
+</code></pre>
+<h3>Regla 4: Denegar Ascenso por Equipaje con Sobrepeso</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>DenyUpgradeForOverweightLuggage</code></li>
+<li><strong>Condición:</strong> Pasajero cuyo equipaje supere los 23 kg (<code>luggageWeight &gt; 23.0</code>).</li>
+<li><strong>Acción:</strong> Inhabilita al pasajero para ascensos (<code>upgradeEligible = false</code>). Emplea la directiva <code>modify($p)</code> de Drools para notificar inmediatamente a la red Rete sobre el cambio en el hecho, cancelando cualquier activación previa de ascenso a Business.</li>
+<li><strong>Salience:</strong> 30 (prioridad más alta entre las reglas de asignación de clase).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;DenyUpgradeForOverweightLuggage&quot;
+    salience 30
+    when
+        $p : Passenger(luggageWeight &gt; 23.0, upgradeEligible == true)
+    then
+        modify($p) {
+            setUpgradeEligible(false)
+        }
+        $p.getAppliedRules().add(&quot;DenyUpgradeForOverweightLuggage: Equipaje &gt; 23kg, no elegible para ascensos&quot;);
+end
+</code></pre>
+<h3>Regla 5: Asignar Asiento de Salida de Emergencia a Adultos Jóvenes</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>AssignEmergencyExitSeatToYoungAdults</code></li>
+<li><strong>Condición:</strong> Pasajero con edad comprendida entre 18 y 40 años inclusive, con preferencia de asiento flexible (<code>seatPreference == &quot;Any&quot;</code>), que no viaje con niños, y en un vuelo con asiento de salida de emergencia disponible (<code>emergencyExitAvailable == true</code>).</li>
+<li><strong>Acción:</strong> Asigna la salida de emergencia (<code>assignedSeat = &quot;Emergency Exit&quot;</code>) y marca la salida de emergencia como ocupada en el hecho del vuelo (<code>emergencyExitAvailable = false</code>).</li>
+<li><strong>Salience:</strong> 10.</li>
+</ul>
+<pre><code class="language-drools">rule &quot;AssignEmergencyExitSeatToYoungAdults&quot;
+    salience 10
+    when
+        $p : Passenger(age &gt;= 18, age &lt;= 40, seatPreference == &quot;Any&quot;, travelingWithChildren == false, assignedSeat != &quot;Emergency Exit&quot;)
+        $f : Flight(emergencyExitAvailable == true)
+    then
+        $p.setAssignedSeat(&quot;Emergency Exit&quot;);
+        $f.setEmergencyExitAvailable(false);
+        $p.getAppliedRules().add(&quot;AssignEmergencyExitSeatToYoungAdults: Asiento de salida de emergencia asignado a adulto joven (18-40 años)&quot;);
+end
+</code></pre>
+<h3>Regla 6: Compensación Económica por Retrasos Extremos</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>CompensationForExtremeDelays</code></li>
+<li><strong>Condición:</strong> Vuelo con retraso superior a 180 minutos (3 horas) (<code>delayMinutes &gt; 180</code>).</li>
+<li><strong>Acción:</strong> Concede una compensación económica de $200 USD directamente al pasajero (<code>compensationAmount = 200.0</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;CompensationForExtremeDelays&quot;
+    when
+        $p : Passenger(compensationAmount &lt; 200.0)
+        $f : Flight(delayMinutes &gt; 180)
+    then
+        $p.setCompensationAmount(200.0);
+        $p.getAppliedRules().add(&quot;CompensationForExtremeDelays: Compensación de $200 otorgada por retraso extremo (&gt; 180m)&quot;);
+end
+</code></pre>
+<h3>Regla 7: Puntos de Lealtad Adicionales por Vuelos de Larga Distancia</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>ExtraLoyaltyPointsForLongFlights</code></li>
+<li><strong>Condición:</strong> Pasajero con membresía activa no básica (<code>membershipStatus != null</code>, <code>membershipStatus != &quot;Basic&quot;</code>) en un vuelo con duración superior a 5 horas (<code>durationHours &gt; 5.0</code>).</li>
+<li><strong>Acción:</strong> Suma 500 puntos de lealtad a la cuenta del pasajero (<code>loyaltyPoints += 500</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;ExtraLoyaltyPointsForLongFlights&quot;
+    when
+        $p : Passenger(membershipStatus != null, membershipStatus != &quot;Basic&quot;)
+        $f : Flight(durationHours &gt; 5.0)
+    then
+        $p.setLoyaltyPoints($p.getLoyaltyPoints() + 500);
+        $p.getAppliedRules().add(&quot;ExtraLoyaltyPointsForLongFlights: 500 puntos de lealtad adicionales por vuelo de larga duración (&gt; 5h)&quot;);
+end
+</code></pre>
+<h3>Regla 8: Restringir Equipaje Pesado en Vuelos Cortos</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>RestrictLuggageOnShortFlights</code></li>
+<li><strong>Condición:</strong> Pasajero con equipaje superior a 15 kg (<code>luggageWeight &gt; 15.0</code>) en un vuelo con duración inferior a 2 horas (<code>durationHours &lt; 2.0</code>).</li>
+<li><strong>Acción:</strong> Deniega el ingreso del equipaje en bodega para ese vuelo (<code>luggageAllowed = false</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;RestrictLuggageOnShortFlights&quot;
+    when
+        $p : Passenger(luggageWeight &gt; 15.0, luggageAllowed == true)
+        $f : Flight(durationHours &lt; 2.0)
+    then
+        $p.setLuggageAllowed(false);
+        $p.getAppliedRules().add(&quot;RestrictLuggageOnShortFlights: Equipaje &gt; 15kg NO permitido en vuelo corto (&lt; 2h)&quot;);
+end
+</code></pre>
+<h3>Regla 9: Acceso al Salón VIP para Miembros Platinum</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>VipLoungeAccessForPlatinumMembers</code></li>
+<li><strong>Condición:</strong> Pasajero con categoría de viajero frecuente <code>&quot;Platinum&quot;</code> (<code>membershipStatus == &quot;Platinum&quot;</code>).</li>
+<li><strong>Acción:</strong> Otorga pase de cortesía al salón VIP (<code>vipLoungeAccess = true</code>).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;VipLoungeAccessForPlatinumMembers&quot;
+    when
+        $p : Passenger(membershipStatus == &quot;Platinum&quot;, vipLoungeAccess == false)
+    then
+        $p.setVipLoungeAccess(true);
+        $p.getAppliedRules().add(&quot;VipLoungeAccessForPlatinumMembers: Acceso a sala VIP otorgado a miembro Platinum&quot;);
+end
+</code></pre>
+<h3>Regla 10: Asiento Preferencial para Grupos Familiares</h3>
+<ul>
+<li><strong>Identificador DRL:</strong> <code>PreferentialSeatForFamilies</code></li>
+<li><strong>Condición:</strong> Pasajero que viaja con niños (<code>travelingWithChildren == true</code>) y que no ha seleccionado una preferencia restrictiva de asiento (<code>seatPreference == null || seatPreference == &quot;Any&quot;</code>).</li>
+<li><strong>Acción:</strong> Asigna automáticamente la zona preferencial para familias (<code>assignedSeat = &quot;Family Preferential&quot;</code>).</li>
+<li><strong>Salience:</strong> 15 (se evalúa con prioridad superior a la regla de salida de emergencia para proteger normativas aeronáuticas que prohíben menores en salidas de emergencia).</li>
+</ul>
+<pre><code class="language-drools">rule &quot;PreferentialSeatForFamilies&quot;
+    salience 15
+    when
+        $p : Passenger(travelingWithChildren == true, seatPreference == null || seatPreference == &quot;Any&quot;)
+    then
+        $p.setAssignedSeat(&quot;Family Preferential&quot;);
+        $p.getAppliedRules().add(&quot;PreferentialSeatForFamilies: Asiento preferencial para familias asignado&quot;);
+end
+</code></pre>
+<hr />
+<h2>5. RESOLUCIÓN DE COMPATIBILIDAD CRÍTICA: DROOLS 7 Y JAVA 21</h2>
+<p>Durante la fase de construcción del entorno de ejecución con Maven, se identificó un fallo crítico a nivel de máquina virtual originado por la arquitectura del compilador de expresiones de Drools:</p>
+<h3>Diagnóstico del Error</h3>
+<pre><code>Factory method 'kieContainer' threw exception with message: java/lang/Compiler
+Caused by: java.lang.NoClassDefFoundError: java/lang/Compiler
+</code></pre>
+<h3>Causa Raíz</h3>
+<p>La clase <code>java.lang.Compiler</code> fue marcada como obsoleta (<em>deprecated for removal</em>) a partir de Java 9 y fue <strong>completamente eliminada del JDK en Java 21</strong>. Las versiones estándar de Drools 7.74.x incluyen internamente dependencias transitivas de <code>mvel2</code> anteriores a la versión <code>2.5.x</code>, las cuales mantenían referencias estáticas a dicha clase para optimizaciones de bytecode en tiempo de ejecución. Al ejecutarse sobre OpenJDK 21.0.8, la JVM arrojaba un error irrecuperable al instanciar el contenedor de reglas.</p>
+<h3>Solución Implementada</h3>
+<p>Se resolvió forzando de manera explícita la dependencia de <strong><code>org.mvel:mvel2:2.5.2.Final</code></strong> en el archivo <code>pom.xml</code>. Esta versión elimina todo enlace con <code>java.lang.Compiler</code>, garantizando compatibilidad nativa con Java 21 LTS sin necesidad de degradar el compilador del sistema a Java 17 ni alterar la API pública de Drools:</p>
+<pre><code class="language-xml">&lt;dependency&gt;
+    &lt;groupId&gt;org.drools&lt;/groupId&gt;
+    &lt;artifactId&gt;drools-mvel&lt;/artifactId&gt;
+    &lt;version&gt;${drools.version}&lt;/version&gt;
+&lt;/dependency&gt;
+&lt;dependency&gt;
+    &lt;groupId&gt;org.mvel&lt;/groupId&gt;
+    &lt;artifactId&gt;mvel2&lt;/artifactId&gt;
+    &lt;version&gt;2.5.2.Final&lt;/version&gt;
+&lt;/dependency&gt;
+</code></pre>
+<hr />
+<h2>6. RESULTADOS EXPERIMENTALES Y PRUEBAS AUTOMATIZADAS</h2>
+<h3>6.1. Matriz de Pruebas Unitarias Automatizadas (JUnit 5)</h3>
+<p>Para garantizar la fiabilidad formal del motor de reglas, se diseñaron 21 casos de prueba automatizados ejecutados mediante Maven Surefire Plugin:</p>
+<p>| Clase de Prueba | Caso de Prueba | Parámetros de Entrada | Resultado Esperado | Estado |
+|---|---|---|---|---|
+| <code>AirlineRulesTest</code> | <code>testRule1_UpgradeToBusinessClass</code> | Gold, Retraso 75 min, Equipaje 18 kg | <code>assignedClass == &quot;Business&quot;</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule2_PriorityCheckInForSeniors</code> | Edad 68 años | <code>priorityCheckIn == true</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule3_DiscountForLightLuggage</code> | Equipaje 8.5 kg | <code>discountPercentage == 10.0%</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule4_DenyUpgradeForOverweight</code> | Platinum, Retraso 90 min, Equipaje 26 kg | <code>upgradeEligible == false</code>, Clase Economy | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule5_AssignEmergencyExitSeat</code> | Edad 24 años, Asiento Any, Salida disponible | <code>assignedSeat == &quot;Emergency Exit&quot;</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule6_CompensationForExtremeDelays</code> | Retraso 200 min | <code>compensationAmount == $200.0</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule7_ExtraLoyaltyPoints</code> | Membresía Silver, Vuelo 6.5 horas | Puntos aumentan de 1000 a 1500 (+500) | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule8_RestrictLuggageOnShortFlights</code> | Equipaje 18 kg, Vuelo 1.2 horas | <code>luggageAllowed == false</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule9_VipLoungeAccess</code> | Membresía Platinum | <code>vipLoungeAccess == true</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testRule10_PreferentialSeatForFamilies</code> | Con niños, Asiento Any | <code>assignedSeat == &quot;Family Preferential&quot;</code> | <strong>PASÓ</strong> |
+| <code>AirlineRulesTest</code> | <code>testCombinedScenario</code> | Senior 70, Platinum, Equipaje 8 kg, Retraso 210m, Vuelo 6h | Se activan 6 reglas en armonía | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba1_RejectLowCreditScore</code> | Score 450 | Rechazado: Score bajo | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba2_RejectUnderAge</code> | Edad 16 años | Rechazado: Menor de edad | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba3_PersonalCredit_LowRate</code> | Score 750, Personal | Aprobado: Tasa 5.0% | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba4_PersonalCredit_HighRate</code> | Score 600, Personal | Aprobado: Tasa 8.0%, Monto ajustado a 10x ingresos | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba5_MortgageCredit_LowRate</code> | Score 800, Hipotecario | Aprobado: Tasa 3.5% | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba6_MortgageCredit_HighRate</code> | Score 650, Hipotecario | Aprobado: Tasa 4.5%, Monto ajustado a 50x ingresos | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba7_AutoCredit_LowRate</code> | Score 720, Automotriz | Aprobado: Tasa 6.0% | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba8_AutoCredit_HighRate</code> | Score 600, Automotriz | Aprobado: Tasa 7.5%, Monto ajustado a 20x ingresos | <strong>PASÓ</strong> |
+| <code>CreditRulesTest</code> | <code>testPrueba9_RejectInvalidCreditType</code> | Ingresos insuficientes hipotecario | Rechazo genérico por tipo de crédito | <strong>PASÓ</strong> |
+| <code>DroolrulesApplicationTests</code> | <code>contextLoads</code> | Contexto de Spring Boot | Carga correcta del contenedor | <strong>PASÓ</strong> |</p>
+<h3>6.2. Registro Oficial de Consola Maven Surefire</h3>
+<pre><code>[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.udea.droolrules.AirlineRulesTest
+[INFO] Tests run: 11, Failures: 0, Errors: 0, Skipped: 0 -- in com.udea.droolrules.AirlineRulesTest
+[INFO] Running com.udea.droolrules.CreditRulesTest
+[INFO] Tests run: 9, Failures: 0, Errors: 0, Skipped: 0 -- in com.udea.droolrules.CreditRulesTest
+[INFO] Running com.udea.droolrules.DroolrulesApplicationTests
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0 -- in com.udea.droolrules.DroolrulesApplicationTests
+[INFO] 
+[INFO] Results:
+[INFO] Tests run: 21, Failures: 0, Errors: 0, Skipped: 0
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] Total time:  11.187 s
+[INFO] ------------------------------------------------------------------------
+</code></pre>
+<hr />
+<h2>7. EVIDENCIAS VISUALES DEL FUNCIONAMIENTO DEL SISTEMA</h2>
+<h3>7.1. Portal Central de Navegación</h3>
+<p>Vista principal accesible en <code>http://localhost:8080/</code>, la cual centraliza el acceso interactivo tanto al simulador de aerolínea como al evaluador de créditos bancarios.</p>
+<p><img src="imagenes_informe_lab2/01_portal_inicio.png" alt="Portal de Inicio" /></p>
+<hr />
+<h3>7.2. Formulario Interactivo del Motor de Aerolínea</h3>
+<p>El formulario permite ingresar de forma precisa los hechos del pasajero y del vuelo. Incluye una barra de accesos directos (<em>Presets</em>) para cargar en un solo clic los parámetros correspondientes a cada una de las 10 reglas.</p>
+<p><img src="imagenes_informe_lab2/02_formulario_aerolinea.png" alt="Formulario de Aerolínea" /></p>
+<hr />
+<h3>7.3. Ejecución de la Regla 1: Ascenso por Retraso a Viajero Frecuente</h3>
+<p>Evaluación de un pasajero categoría Gold en un vuelo con 75 minutos de retraso. Se observa el ascenso automático a Clase Ejecutiva.</p>
+<p><img src="imagenes_informe_lab2/04_resultado_upgrade_retraso.png" alt="Resultado Upgrade por Retraso" /></p>
+<hr />
+<h3>7.4. Ejecución de la Regla 2: Check-in Prioritario para Adultos Mayores</h3>
+<p>Evaluación de un pasajero de 70 años. Se evidencia la activación del check-in prioritario en la memoria de trabajo.</p>
+<p><img src="imagenes_informe_lab2/05_resultado_senior_checkin.png" alt="Resultado Senior Check-in" /></p>
+<hr />
+<h3>7.5. Ejecución de la Regla 5: Asignación de Salida de Emergencia</h3>
+<p>Evaluación de un adulto joven (24 años) sin niños y con asiento flexible. Drools asigna la salida de emergencia y actualiza la disponibilidad del vuelo.</p>
+<p><img src="imagenes_informe_lab2/06_resultado_salida_emergencia.png" alt="Resultado Salida Emergencia" /></p>
+<hr />
+<h3>7.6. Ejecución de la Regla 6: Compensación por Retraso Extremo</h3>
+<p>Evaluación de un vuelo con más de 180 minutos de retraso (210 min). El motor asigna la indemnización económica de $200 USD.</p>
+<p><img src="imagenes_informe_lab2/07_resultado_compensacion_retraso.png" alt="Resultado Compensacion Retraso" /></p>
+<hr />
+<h3>7.7. Ejecución de la Regla 9: Acceso al Salón VIP para Miembros Platinum</h3>
+<p>Evaluación de un pasajero con categoría Platinum. Se activa el beneficio exclusivo de acceso al salón VIP.</p>
+<p><img src="imagenes_informe_lab2/08_resultado_vip_platinum.png" alt="Resultado Salon VIP Platinum" /></p>
+<hr />
+<h3>7.8. Ejecución de la Regla 10: Asiento Preferencial para Grupos Familiares</h3>
+<p>Evaluación de un pasajero que viaja con menores de edad. Drools asigna la fila preferencial para familias.</p>
+<p><img src="imagenes_informe_lab2/09_resultado_asiento_familiar.png" alt="Resultado Asiento Familiar" /></p>
+<hr />
+<h3>7.9. Sistema de Evaluación de Créditos Bancarios</h3>
+<p>Capturas correspondientes a la evaluación de créditos personal, hipotecario y automotriz, contrastando un caso aprobado con un caso rechazado por puntaje crediticio deficiente (&lt; 500).</p>
+<p><img src="imagenes_informe_lab2/10_formulario_credito.png" alt="Formulario de Credito Bancario" /></p>
+<p><img src="imagenes_informe_lab2/11_resultado_credito_aprobado.png" alt="Resultado Credito Aprobado" /></p>
+<p><img src="imagenes_informe_lab2/12_resultado_credito_rechazado.png" alt="Resultado Credito Rechazado" /></p>
+<hr />
+<h2>8. ANÁLISIS COMPARATIVO Y DISCUSIÓN TÉCNICA</h2>
+<h3>8.1. Comparativa: Reglas Declarativas (Drools) vs Lógica Imperativa Tradicional</h3>
+<p>| Criterio | Programación Imperativa (<code>Java if-else</code>) | Enfoque BRMS con Drools (<code>.drl</code>) |
+|---|---|---|
+| <strong>Mantenibilidad</strong> | Alta complejidad ciclomática cuando las reglas superan la decena. | Reglas atómicas e independientes; agregar una regla no perturba las existentes. |
+| <strong>Complejidad Temporal</strong> | En el peor caso $O(N \times M)$ evaluando secuencialmente cada condición. | $O(1)$ a $O(\log N)$ gracias a la indexación de nodos Alpha y Beta de Rete. |
+| <strong>Tiempo de Despliegue</strong> | Requiere recompilación de código Java, empaquetado del JAR y reinicio del servidor. | Las reglas pueden recargarse dinámicamente en caliente desde BD o repositorio Git. |
+| <strong>Auditoría y Trazabilidad</strong> | Difícil saber qué rama condicional se activó sin instrumentar logs exhaustivos. | Cada regla activada queda registrada en la Agenda de Drools con trazabilidad nativa. |
+| <strong>Resolución de Conflictos</strong> | Basada rígidamente en el orden físico de las sentencias <code>if</code>. | Manejo elegante mediante atributos <code>salience</code>, <code>agenda-group</code> y <code>activation-group</code>. |</p>
+<h3>8.2. Manejo de Conflictos y Propagación de Hechos en Rete</h3>
+<p>Un hallazgo crítico durante el desarrollo fue el comportamiento de la regla 4 (<code>DenyUpgradeForOverweightLuggage</code>) frente a la regla 1 (<code>UpgradeToBusinessClassForFrequentFlyersWithDelays</code>).
+Cuando un pasajero posee categoría frecuente pero su equipaje excede los 23 kg, la normativa de la aerolínea estipula que <strong>no debe ascender a clase ejecutiva</strong>. Si la regla 4 simplemente modifica el atributo en Java (<code>$p.setUpgradeEligible(false)</code>), Drools no reevalúa los patrones de la red Rete a menos que se invoque explícitamente el bloque:</p>
+<pre><code class="language-drools">modify($p) {
+    setUpgradeEligible(false)
+}
+</code></pre>
+<p>Al utilizar <code>modify</code>, el motor actualiza el estado del hecho en todos los nodos de la red Rete, cancelando inmediatamente la activación de la regla 1. Esto demuestra la importancia de comprender la semántica interna de la memoria de trabajo de Drools frente a simples llamadas a métodos de instancia en Java.</p>
+<hr />
+<h2>9. CONCLUSIONES</h2>
+<ol>
+<li><strong>Eficiencia en la Separación de Incumbencias:</strong> La implementación de Drools sobre Spring Boot demostró que es viable y altamente productivo aislar las políticas cambiantes del negocio en archivos <code>.drl</code>, dejando el código Java enfocado exclusivamente en la infraestructura, persistencia y exposición de servicios.</li>
+<li><strong>Robustez y Escalabilidad:</strong> El algoritmo Rete demostró un comportamiento óptimo y predecible al evaluar simultáneamente 10 reglas complejas con dependencias cruzadas entre pasajeros y vuelos, ejecutando todas las comprobaciones en milisegundos.</li>
+<li><strong>Compatibilidad con Versiones Modernas de Java:</strong> Se comprobó experimentalmente que es posible ejecutar la suite de Drools 7 en entornos modernos con Java 21 LTS mediante el ajuste preciso de la librería de análisis de expresiones <code>mvel2:2.5.2.Final</code>, superando las limitaciones derivadas de la deprecación de APIs nativas del JDK.</li>
+<li><strong>Verificación Formal al 100%:</strong> La creación de 21 pruebas unitarias automáticas con JUnit 5 garantizó que cada una de las 10 reglas de la aerolínea y los 9 casos de crédito bancario cumplan estrictamente con las especificaciones del curso, eliminando cualquier margen de error en tiempo de ejecución.</li>
+<li><strong>Experiencia de Usuario Integral:</strong> La inclusión de una interfaz web reactiva con Bootstrap y botones de prueba rápida en conjunto con la API REST JSON permite una validación inmediata y didáctica tanto para usuarios finales como para desarrolladores y evaluadores académicos.</li>
+</ol>
+<hr />
+<h2>10. REFERENCIAS BIBLIOGRÁFICAS</h2>
+<ol>
+<li><strong>JBoss Drools Documentation:</strong> <em>Drools Rule Engine Guide and Architecture</em>. Red Hat Inc. Recuperado de: https://docs.jboss.org/drools/release/7.74.1.Final/drools-docs/html_single/</li>
+<li><strong>KIE Group:</strong> <em>Knowledge Is Everything Community Documentation</em>. Recuperado de: https://www.kiegroup.org/</li>
+<li><strong>Baeldung:</strong> <em>Drools with Spring Boot Integration</em>. Recuperado de: https://www.baeldung.com/drools-spring-integration</li>
+<li><strong>Forgy, C. L. (1982):</strong> <em>Rete: A Fast Algorithm for the Many Pattern/Many Object Pattern Match Problem</em>. Artificial Intelligence, 19(1), 17-37.</li>
+<li><strong>Spring Boot Documentation:</strong> <em>Building Web Applications and RESTful Services with Spring Boot 3</em>. VMware Tanzu. Recuperado de: https://spring.io/projects/spring-boot</li>
+<li><strong>Guía de Laboratorio UdeA (2026):</strong> <em>Laboratorio Nro 2. Reglas del Negocio con Spring Boot y Drools</em>. Universidad de Antioquia.</li>
+</ol>
+
+</body>
+</html>
